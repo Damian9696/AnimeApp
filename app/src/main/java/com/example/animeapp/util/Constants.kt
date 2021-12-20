@@ -8,4 +8,8 @@ object Constants {
     const val ANIME_DATABASE = "anime_database"
 
     const val SEPARATOR = ","
+
+    const val ROTATE_360 = 360f
+    const val DURATION_SECOND = 1000
+    const val SMALL_DELAY = 200
 }
