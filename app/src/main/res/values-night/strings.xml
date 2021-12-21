@@ -11,4 +11,5 @@
     <string name="on_boarding_description_first">Greetings description</string>
     <string name="on_boarding_description_second">Explore description</string>
     <string name="on_boarding_description_third">Power description</string>
+    <string name="on_boarding_image">Onboarding image</string>
 </resources>
