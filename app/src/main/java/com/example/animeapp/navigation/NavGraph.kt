@@ -1,5 +1,6 @@
 package com.example.animeapp.navigation
 
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -7,8 +8,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.animeapp.presentation.screens.splash.SplashScreen
+import com.example.animeapp.presentation.screens.welcome.WelcomeScreen
 import com.example.animeapp.util.Constants.DETAILS_ARGUMENT_KEY
+import com.google.accompanist.pager.ExperimentalPagerApi
 
+@ExperimentalAnimationApi
+@ExperimentalPagerApi
 @Composable
 fun SetupNavGraph(navController: NavHostController) {
     NavHost(
@@ -19,7 +24,7 @@ fun SetupNavGraph(navController: NavHostController) {
             SplashScreen(navHostController = navController)
         }
         composable(route = Screen.Welcome.route) {
-            //composable view
+            WelcomeScreen(navHostController = navController)
         }
         composable(route = Screen.Home.route) {
             //composable view

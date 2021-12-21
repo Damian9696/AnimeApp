@@ -1,4 +1,16 @@
 <resources>
     <string name="app_name">AnimeApp</string>
+
+    <!--Splash screen-->
     <string name="app_logo">App logo</string>
+
+    <!--Welcome screen-->
+    <string name="on_boarding_title_first">Greetings</string>
+    <string name="on_boarding_title_second">Explore</string>
+    <string name="on_boarding_title_third">Power</string>
+    <string name="on_boarding_description_first">Greetings description</string>
+    <string name="on_boarding_description_second">Explore description</string>
+    <string name="on_boarding_description_third">Power description</string>
+    <string name="on_boarding_image">Onboarding image</string>
+    <string name="finish">Finish</string>
 </resources>
