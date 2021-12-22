@@ -9,6 +9,9 @@ object Constants {
 
     const val SEPARATOR = ","
 
+    const val PREFERENCES_NAME = "anime_preferences"
+    const val PREFERENCES_KEY = "on_boarding_completed"
+
     const val ROTATE_360 = 360f
     const val DURATION_SECOND = 1000
     const val SMALL_DELAY = 200
