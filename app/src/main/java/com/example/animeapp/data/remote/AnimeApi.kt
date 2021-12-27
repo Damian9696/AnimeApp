@@ -4,7 +4,7 @@ import com.example.animeapp.domain.model.ApiResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-interface AnimeInterface {
+interface AnimeApi {
 
     @GET("/anime/heroes")
     suspend fun getAllHeroes(@Query("page") page: Int = 1): ApiResponse
