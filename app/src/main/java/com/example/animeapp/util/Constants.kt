@@ -15,4 +15,8 @@ object Constants {
     const val ROTATE_360 = 360f
     const val DURATION_SECOND = 1000
     const val SMALL_DELAY = 200
+
+    const val BASE_URL = "http://10.0.2.2:8080"
+    const val CONTENT_TYPE = "application/json"
+    const val TIME_OUT = 15L
 }
