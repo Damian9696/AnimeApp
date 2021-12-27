@@ -21,9 +21,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.animeapp.R
 import com.example.animeapp.domain.model.OnBoardingPage
+import com.example.animeapp.navigation.Screen
 import com.example.animeapp.ui.theme.*
 import com.google.accompanist.pager.*
 
@@ -36,7 +38,10 @@ val onBoardingPages = listOf(
 @ExperimentalAnimationApi
 @ExperimentalPagerApi
 @Composable
-fun WelcomeScreen(navHostController: NavHostController) {
+fun WelcomeScreen(
+    navHostController: NavHostController,
+    welcomeScreenViewModel: WelcomeScreenViewModel = hiltViewModel()
+) {
 
     val pagerState = rememberPagerState()
 
@@ -67,9 +72,18 @@ fun WelcomeScreen(navHostController: NavHostController) {
             pagerState = pagerState,
             modifier = Modifier.weight(2f)
         ) {
-
+            welcomeScreenNavigation(navHostController, welcomeScreenViewModel)
         }
     }
+}
+
+private fun welcomeScreenNavigation(
+    navHostController: NavHostController,
+    welcomeScreenViewModel: WelcomeScreenViewModel
+) {
+    navHostController.popBackStack()
+    navHostController.navigate(Screen.Home.route)
+    welcomeScreenViewModel.saveOnBoardingState(completed = true)
 }
 
 @Composable
