@@ -21,9 +21,30 @@ class HeroRemoteMediator @Inject constructor(
     private val heroRemoteKeyDao = animeDatabase.heroRemoteKeyDao()
 
     override suspend fun load(loadType: LoadType, state: PagingState<Int, Hero>): MediatorResult {
-        try {
+        return try {
 
-            val response = animeApi.getAllHeroes(page =)
+            val page = when (loadType) {
+                LoadType.REFRESH -> {
+                    val remoteKey = getRemoteKeyClosestToCurrentPosition(state)
+                    remoteKey?.nextPage?.minus(1) ?: 1
+                }
+                LoadType.PREPEND -> {
+                    val remoteKey = getRemoteKeyForFirstItem(state)
+                    val prevPage = remoteKey?.prevPage ?: return MediatorResult.Success(
+                        endOfPaginationReached = remoteKey != null
+                    )
+                    prevPage
+                }
+                LoadType.APPEND -> {
+                    val remoteKey = getRemoteKeyForLastItem(state)
+                    val nextPage = remoteKey?.nextPage ?: return MediatorResult.Success(
+                        endOfPaginationReached = remoteKey != null
+                    )
+                    nextPage
+                }
+            }
+
+            val response = animeApi.getAllHeroes(page = page)
             if (response.heroes.isNotEmpty()) {
                 animeDatabase.withTransaction {
                     if (loadType == LoadType.REFRESH) {
@@ -43,9 +64,32 @@ class HeroRemoteMediator @Inject constructor(
                     heroDao.addHeroes(heroes = response.heroes)
                 }
             }
-            MediatorResult.Success(endOfPaginationReached = response.nextPage == null)
+             MediatorResult.Success(endOfPaginationReached = response.nextPage == null)
         } catch (e: Exception) {
-            MediatorResult.Error(e)
+             MediatorResult.Error(e)
+        }
+    }
+
+
+    private suspend fun getRemoteKeyClosestToCurrentPosition(
+        state: PagingState<Int, Hero>
+    ): HeroRemoteKey? {
+        return state.anchorPosition?.let { position ->
+            state.closestItemToPosition(position)?.id?.let { id ->
+                heroRemoteKeyDao.getRemoteKey(id = id)
+            }
+        }
+    }
+
+    private suspend fun getRemoteKeyForFirstItem(state: PagingState<Int, Hero>): HeroRemoteKey? {
+        return state.pages.firstOrNull { it.data.isNotEmpty() }?.data?.firstOrNull()?.let { hero ->
+            heroRemoteKeyDao.getRemoteKey(id = hero.id)
+        }
+    }
+
+    private suspend fun getRemoteKeyForLastItem(state: PagingState<Int, Hero>): HeroRemoteKey? {
+        return state.pages.lastOrNull { it.data.isNotEmpty() }?.data?.lastOrNull()?.let { hero ->
+            heroRemoteKeyDao.getRemoteKey(id = hero.id)
         }
     }
 }
