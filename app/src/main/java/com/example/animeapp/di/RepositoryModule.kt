@@ -5,6 +5,7 @@ import com.example.animeapp.data.local.preferences.DataStoreOperations
 import com.example.animeapp.data.local.preferences.DataStoreOperationsImpl
 import com.example.animeapp.data.repository.Repository
 import com.example.animeapp.domain.use_cases.UseCases
+import com.example.animeapp.domain.use_cases.get_all_heroes.GetAllHeroesUseCase
 import com.example.animeapp.domain.use_cases.read_onboarding.ReadOnBoardingUseCase
 import com.example.animeapp.domain.use_cases.save_onboarding.SaveOnBoardingUseCase
 import dagger.Module
@@ -29,7 +30,8 @@ object RepositoryModule {
     fun provideUseCases(repository: Repository): UseCases {
         return UseCases(
             saveOnBoardingUseCase = SaveOnBoardingUseCase(repository = repository),
-            readOnBoardingUseCase = ReadOnBoardingUseCase(repository = repository)
+            readOnBoardingUseCase = ReadOnBoardingUseCase(repository = repository),
+            getAllHeroesUseCase = GetAllHeroesUseCase(repository = repository)
         )
     }
 }
