@@ -1,9 +1,11 @@
 package com.example.animeapp.presentation.components
 
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
@@ -16,7 +18,10 @@ import androidx.compose.ui.graphics.vector.PathParser
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.example.animeapp.presentation.components.StarType.*
+import com.example.animeapp.ui.theme.LARGE_PADDING
 import com.example.animeapp.ui.theme.LightGray
 import com.example.animeapp.ui.theme.Star
 import com.example.animeapp.util.Constants.STAR_PATH
@@ -25,20 +30,52 @@ import com.example.animeapp.util.Constants.STAR_PATH
 fun RatingWidget(
     modifier: Modifier,
     rating: Double,
-    scaleFactor: Float = 3f
+    scaleFactor: Float = 3f,
+    spaceBetween: Dp = LARGE_PADDING
 ) {
-    val starPath = remember {
-        PathParser().parsePathString(pathData = STAR_PATH).toPath()
-    }
-    val starPathBounds = remember {
-        starPath.getBounds()
+
+    val result = calculateStars(rating = rating)
+
+    val starPath by remember {
+        mutableStateOf(
+            PathParser().parsePathString(pathData = STAR_PATH).toPath()
+        )
     }
 
-    FilledStar(
-        starPath = starPath,
-        starPathBounds = starPathBounds,
-        scaleFactor = scaleFactor
-    )
+    val starPathBounds by remember { mutableStateOf(starPath.getBounds()) }
+
+    Row(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.spacedBy(space = spaceBetween)
+    ) {
+        result[FILLED]?.let {
+            repeat(it) {
+                FilledStar(
+                    starPath = starPath,
+                    starPathBounds = starPathBounds,
+                    scaleFactor = scaleFactor
+                )
+            }
+        }
+        result[HALF_FILLED]?.let {
+            repeat(it) {
+                HalfFilledStar(
+                    starPath = starPath,
+                    starPathBounds = starPathBounds,
+                    scaleFactor = scaleFactor
+                )
+            }
+        }
+        result[EMPTY]?.let {
+            repeat(it) {
+                EmptyStar(
+                    starPath = starPath,
+                    starPathBounds = starPathBounds,
+                    scaleFactor = scaleFactor
+                )
+            }
+        }
+    }
 }
 
 @Composable
@@ -49,7 +86,7 @@ fun FilledStar(
 ) {
     Canvas(modifier = Modifier.size(24.dp)) {
 
-        val canvasSize = this.size
+        val canvasSize = size
 
         scale(scale = scaleFactor) {
             val pathWidth = starPathBounds.width
@@ -75,7 +112,7 @@ fun HalfFilledStar(
 ) {
     Canvas(modifier = Modifier.size(24.dp)) {
 
-        val canvasSize = this.size
+        val canvasSize = size
 
         scale(scale = scaleFactor) {
             val pathWidth = starPathBounds.width
@@ -110,7 +147,7 @@ fun EmptyStar(
 ) {
     Canvas(modifier = Modifier.size(24.dp)) {
 
-        val canvasSize = this.size
+        val canvasSize = size
 
         scale(scale = scaleFactor) {
             val pathWidth = starPathBounds.width
@@ -128,13 +165,47 @@ fun EmptyStar(
     }
 }
 
+@Composable
+fun calculateStars(rating: Double): Map<StarType, Int> {
+    val maxStars by remember { mutableStateOf(5) }
+    var filledStars by remember { mutableStateOf(0) }
+    var halfFilledStars by remember { mutableStateOf(0) }
+    var emptyStars by remember { mutableStateOf(0) }
+
+    LaunchedEffect(key1 = rating) {
+        val (firstNumber, lastNumber) = rating.toString().split(".").map { it.toInt() }
+
+        if (firstNumber in 0..5 && lastNumber in 0..9) {
+            filledStars = firstNumber
+            if (lastNumber in 1..5) {
+                halfFilledStars++
+            }
+            if (lastNumber in 6..9) {
+                filledStars++
+            }
+            if (firstNumber == 5 && lastNumber > 0) {
+                emptyStars = 5
+                filledStars = 0
+                halfFilledStars = 0
+            }
+        }
+    }
+    emptyStars = maxStars - (filledStars + halfFilledStars)
+
+    return mapOf(
+        FILLED to filledStars,
+        HALF_FILLED to halfFilledStars,
+        EMPTY to emptyStars
+    )
+}
+
 data class StarPreview(
     val starPath: Path = PathParser().parsePathString(pathData = STAR_PATH).toPath(),
     val starPathBounds: Rect = starPath.getBounds(),
     val scaleFactor: Float
 )
 
-class RatingPreviewParameterProvider : PreviewParameterProvider<StarPreview> {
+class StarPreviewParameterProvider : PreviewParameterProvider<StarPreview> {
     override val values = sequenceOf(
         StarPreview(scaleFactor = 1f),
         StarPreview(scaleFactor = 2f),
@@ -146,7 +217,7 @@ class RatingPreviewParameterProvider : PreviewParameterProvider<StarPreview> {
 @Preview(showBackground = true)
 @Composable
 fun FilledStarPreview(
-    @PreviewParameter(RatingPreviewParameterProvider::class) starPreview: StarPreview
+    @PreviewParameter(StarPreviewParameterProvider::class) starPreview: StarPreview
 ) {
     FilledStar(
         starPath = starPreview.starPath,
@@ -158,7 +229,7 @@ fun FilledStarPreview(
 @Preview(showBackground = true)
 @Composable
 fun HalfFilledStarPreview(
-    @PreviewParameter(RatingPreviewParameterProvider::class) starPreview: StarPreview
+    @PreviewParameter(StarPreviewParameterProvider::class) starPreview: StarPreview
 ) {
     HalfFilledStar(
         starPath = starPreview.starPath,
@@ -170,11 +241,30 @@ fun HalfFilledStarPreview(
 @Preview(showBackground = true)
 @Composable
 fun EmptyStarPreview(
-    @PreviewParameter(RatingPreviewParameterProvider::class) starPreview: StarPreview
+    @PreviewParameter(StarPreviewParameterProvider::class) starPreview: StarPreview
 ) {
     EmptyStar(
         starPath = starPreview.starPath,
         starPathBounds = starPreview.starPathBounds,
         scaleFactor = starPreview.scaleFactor
     )
+}
+
+class RatingWidgetPreviewParameterProvider : PreviewParameterProvider<Double> {
+    override val values = sequenceOf(0.1, 0.6, 1.0, 1.1, 1.6, 4.4, 4.9, 5.1, 6.0)
+
+}
+
+@Preview(showBackground = true)
+@Composable
+fun RatingWidgetPreview(
+    @PreviewParameter(RatingWidgetPreviewParameterProvider::class) rating: Double
+) {
+    RatingWidget(modifier = Modifier.padding(all = LARGE_PADDING), rating = rating)
+}
+
+enum class StarType {
+    FILLED,
+    HALF_FILLED,
+    EMPTY
 }
