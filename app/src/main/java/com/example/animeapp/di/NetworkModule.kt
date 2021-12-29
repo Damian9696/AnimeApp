@@ -1,11 +1,11 @@
 package com.example.animeapp.di
 
 import androidx.paging.ExperimentalPagingApi
+import com.example.animeapp.BuildConfig
 import com.example.animeapp.data.local.database.AnimeDatabase
 import com.example.animeapp.data.remote.AnimeApi
 import com.example.animeapp.data.remote.RemoteDataSource
 import com.example.animeapp.data.repository.RemoteDataSourceImpl
-import com.example.animeapp.util.Constants.BASE_URL
 import com.example.animeapp.util.Constants.CONTENT_TYPE
 import com.example.animeapp.util.Constants.TIME_OUT
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
@@ -38,7 +38,7 @@ object NetworkModule {
     fun provideRetrofitInstance(okHttpClient: OkHttpClient, mediaType: MediaType): Retrofit {
         return Retrofit
             .Builder()
-            .baseUrl(BASE_URL)
+            .baseUrl(BuildConfig.BASE_URL)
             .client(okHttpClient)
             .addConverterFactory(Json.asConverterFactory(mediaType))
             .build()
