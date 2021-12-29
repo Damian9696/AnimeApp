@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import coil.annotation.ExperimentalCoilApi
 import com.example.animeapp.navigation.SetupNavGraph
 import com.example.animeapp.ui.theme.AnimeAppTheme
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -16,6 +17,7 @@ class MainActivity : ComponentActivity() {
 
     private lateinit var navController: NavHostController
 
+    @ExperimentalCoilApi
     @ExperimentalAnimationApi
     @ExperimentalPagerApi
     override fun onCreate(savedInstanceState: Bundle?) {
