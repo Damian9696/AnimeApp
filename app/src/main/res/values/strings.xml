@@ -17,4 +17,7 @@
     <!-- Home Top Bar-->
     <string name="explore">Explore</string>
     <string name="search_icon">Search icon</string>
+
+    <!-- Hero Item-->
+    <string name="hero_image">Hero image</string>
 </resources>
