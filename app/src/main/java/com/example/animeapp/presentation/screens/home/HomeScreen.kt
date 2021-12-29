@@ -15,13 +15,13 @@ fun HomeScreen(
     homeViewModel: HomeViewModel = hiltViewModel()
 ) {
 
-    val allheroes = homeViewModel.getAllHeroes.collectAsLazyPagingItems()
+    val allHeroes = homeViewModel.getAllHeroes.collectAsLazyPagingItems()
 
     Scaffold(topBar = {
         HomeTopBar()
     }, content = {
         ListContent(
-            heroes = allheroes,
+            heroes = allHeroes,
             navHostController = navHostController
         )
     })
