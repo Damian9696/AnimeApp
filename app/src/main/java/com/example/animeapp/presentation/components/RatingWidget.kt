@@ -17,6 +17,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
+import com.example.animeapp.ui.theme.LightGray
 import com.example.animeapp.ui.theme.Star
 import com.example.animeapp.util.Constants.STAR_PATH
 
@@ -101,6 +102,31 @@ fun HalfFilledStar(
     }
 }
 
+@Composable
+fun EmptyStar(
+    starPath: Path,
+    starPathBounds: Rect,
+    scaleFactor: Float
+) {
+    Canvas(modifier = Modifier.size(24.dp)) {
+
+        val canvasSize = this.size
+
+        scale(scale = scaleFactor) {
+            val pathWidth = starPathBounds.width
+            val pathHeight = starPathBounds.height
+            val left = (canvasSize.width / 2f) - (pathWidth / 1.7f)
+            val top = (canvasSize.height / 2f) - (pathHeight / 1.7f)
+
+            translate(left = left, top = top) {
+                drawPath(
+                    path = starPath,
+                    color = LightGray.copy(alpha = 0.5f)
+                )
+            }
+        }
+    }
+}
 
 data class StarPreview(
     val starPath: Path = PathParser().parsePathString(pathData = STAR_PATH).toPath(),
@@ -135,6 +161,18 @@ fun HalfFilledStarPreview(
     @PreviewParameter(RatingPreviewParameterProvider::class) starPreview: StarPreview
 ) {
     HalfFilledStar(
+        starPath = starPreview.starPath,
+        starPathBounds = starPreview.starPathBounds,
+        scaleFactor = starPreview.scaleFactor
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun EmptyStarPreview(
+    @PreviewParameter(RatingPreviewParameterProvider::class) starPreview: StarPreview
+) {
+    EmptyStar(
         starPath = starPreview.starPath,
         starPathBounds = starPreview.starPathBounds,
         scaleFactor = starPreview.scaleFactor
