@@ -29,4 +29,7 @@ object Constants {
     const val LOREM_IPSUM_SHORT = "Lorem ipsum."
 
     const val SHIMMER_ANIM_DURATION_MILLIS = 500
+
+    const val CACHE_TIMEOUT = 24
+    const val MILLI_TO_HOUR_UNIT = 1000 / 60 / 60
 }
