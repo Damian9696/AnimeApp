@@ -1,7 +1,6 @@
 package com.example.animeapp.presentation.common
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -25,6 +24,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.items
 import coil.annotation.ExperimentalCoilApi
@@ -34,6 +34,7 @@ import com.example.animeapp.R
 import com.example.animeapp.domain.model.Hero
 import com.example.animeapp.navigation.Screen
 import com.example.animeapp.presentation.components.RatingWidget
+import com.example.animeapp.presentation.components.ShimmerEffect
 import com.example.animeapp.ui.theme.*
 import com.example.animeapp.util.Constants.LOREM_IPSUM_LONG
 import com.example.animeapp.util.Constants.LOREM_IPSUM_SHORT
@@ -44,6 +45,10 @@ fun ListContent(
     heroes: LazyPagingItems<Hero>,
     navHostController: NavHostController
 ) {
+
+    val result = handlePagingResult(heroes = heroes)
+    if (!result) return
+
     LazyColumn(
         contentPadding = PaddingValues(all = SMALL_PADDING),
         verticalArrangement = Arrangement.spacedBy(space = SMALL_PADDING)
@@ -56,6 +61,31 @@ fun ListContent(
             hero?.let {
                 HeroItem(hero = it, navHostController = navHostController)
             }
+        }
+    }
+}
+
+@Composable
+fun handlePagingResult(
+    heroes: LazyPagingItems<Hero>
+): Boolean {
+    with(heroes.loadState) {
+        val error = when {
+            this.refresh is LoadState.Error -> this.refresh as LoadState.Error
+            this.prepend is LoadState.Error -> this.prepend as LoadState.Error
+            this.append is LoadState.Error -> this.append as LoadState.Error
+            else -> null
+        }
+
+        return when {
+            this.refresh is LoadState.Loading -> {
+                ShimmerEffect()
+                false
+            }
+            error != null -> {
+                false
+            }
+            else -> true
         }
     }
 }
