@@ -49,8 +49,8 @@ object NetworkModule {
     fun provideOkHttpClient(): OkHttpClient {
         return OkHttpClient
             .Builder()
-            .readTimeout(TIME_OUT, TimeUnit.MINUTES)
-            .connectTimeout(TIME_OUT, TimeUnit.MINUTES)
+            .readTimeout(TIME_OUT, TimeUnit.SECONDS)
+            .connectTimeout(TIME_OUT, TimeUnit.SECONDS)
             .build()
     }
 
