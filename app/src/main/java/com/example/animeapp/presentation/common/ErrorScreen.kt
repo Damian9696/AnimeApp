@@ -39,7 +39,7 @@ fun ErrorScreen(
         mutableStateOf(
             parseErrorMessage(
                 context = context,
-                message = error.toString()
+                error = error
             )
         )
     }
@@ -88,12 +88,12 @@ private fun ErrorContent(alphaAnimation: Float, @DrawableRes icon: Int, message:
     }
 }
 
-fun parseErrorMessage(context: Context, message: String): String {
-    return when {
-        message.contains(context.getString(R.string.socket_timeout_exception)) -> {
+fun parseErrorMessage(context: Context, error: LoadState.Error): String {
+    return when (error.error) {
+        is SocketTimeoutException -> {
             context.getString(R.string.server_unavailable)
         }
-        message.contains(context.getString(R.string.connection_exception)) -> {
+        is ConnectException -> {
             context.getString(R.string.internet_unavailable)
         }
         else -> {
@@ -120,7 +120,7 @@ fun ErrorContentPreview(
         icon = R.drawable.ic_network_error,
         message = parseErrorMessage(
             context = LocalContext.current,
-            message = error.toString()
+            error = error
         )
     )
 }
