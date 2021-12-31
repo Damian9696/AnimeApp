@@ -27,19 +27,15 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            buildConfigField 'String', 'BASE_URL', "\"\""
         }
         debug {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            buildConfigField 'String', 'BASE_URL', "\"http://192.168.0.10:8080\""
         }
         emulator {
             initWith(buildTypes.debug)
             buildConfigField 'String', 'BASE_URL', "\"http://10.0.2.2:8080\""
-        }
-        physical {
-            initWith(buildTypes.debug)
-            buildConfigField 'String', 'BASE_URL', "\"http://192.168.0.10:8080\""
         }
     }
     compileOptions {
