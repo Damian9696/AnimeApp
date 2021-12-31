@@ -9,6 +9,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import coil.annotation.ExperimentalCoilApi
 import com.example.animeapp.presentation.screens.home.HomeScreen
+import com.example.animeapp.presentation.screens.search.SearchScreen
 import com.example.animeapp.presentation.screens.splash.SplashScreen
 import com.example.animeapp.presentation.screens.welcome.WelcomeScreen
 import com.example.animeapp.util.Constants.DETAILS_ARGUMENT_KEY
@@ -41,7 +42,7 @@ fun SetupNavGraph(navController: NavHostController) {
             //composable view
         }
         composable(route = Screen.Search.route) {
-            //composable view
+            SearchScreen()
         }
     }
 }
