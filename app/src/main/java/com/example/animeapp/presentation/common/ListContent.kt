@@ -83,6 +83,7 @@ fun handlePagingResult(
                 false
             }
             error != null -> {
+                ErrorScreen(error = error)
                 false
             }
             else -> true

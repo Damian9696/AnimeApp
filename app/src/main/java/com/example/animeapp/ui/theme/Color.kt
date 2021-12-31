@@ -56,3 +56,7 @@ val Colors.shimmerBackgroundColor
 val Colors.shimmerContentColor
     @Composable
     get() = if (isLight) ShimmerMediumGray else ShimmerDarkGray
+
+val Colors.errorContentColor
+    @Composable
+    get() = if (isLight) DarkGray else LightGray

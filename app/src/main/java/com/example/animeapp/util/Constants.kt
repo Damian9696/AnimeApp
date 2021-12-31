@@ -31,5 +31,5 @@ object Constants {
     const val SHIMMER_ANIM_DURATION_MILLIS = 500
 
     const val CACHE_TIMEOUT = 24
-    const val MILLI_TO_HOUR_UNIT = 1000 / 60 / 60
+    const val MILLI_TO_HOUR_UNIT = (1000f / 60f / 60f)
 }

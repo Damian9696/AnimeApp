@@ -20,4 +20,12 @@
 
     <!-- Hero Item-->
     <string name="hero_image">Hero image</string>
+
+    <!-- Error Screen-->
+    <string name="socket_timeout_exception">SocketTimeoutException</string>
+    <string name="server_unavailable">Server Unavailable</string>
+    <string name="connection_exception">ConnectException</string>
+    <string name="internet_unavailable">Internet Unavailable</string>
+    <string name="unknown_error">Unknown exception</string>
+    <string name="network_error_icon">Network Error Icon</string>
 </resources>
