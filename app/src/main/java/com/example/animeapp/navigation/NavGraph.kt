@@ -42,7 +42,9 @@ fun SetupNavGraph(navController: NavHostController) {
             //composable view
         }
         composable(route = Screen.Search.route) {
-            SearchScreen()
+            SearchScreen(
+                navHostController = navController
+            )
         }
     }
 }
