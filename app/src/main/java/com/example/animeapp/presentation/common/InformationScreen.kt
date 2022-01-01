@@ -6,6 +6,8 @@ import androidx.annotation.DrawableRes
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ContentAlpha
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
@@ -23,17 +25,22 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.paging.LoadState
+import androidx.paging.compose.LazyPagingItems
 import com.example.animeapp.R
+import com.example.animeapp.domain.model.Hero
 import com.example.animeapp.ui.theme.NETWORK_ERROR_ICON_SIZE
 import com.example.animeapp.ui.theme.SMALL_PADDING
 import com.example.animeapp.ui.theme.errorContentColor
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import java.net.ConnectException
 import java.net.SocketTimeoutException
 
 @Composable
 fun InformationScreen(
     error: LoadState.Error? = null,
-    context: Context = LocalContext.current
+    context: Context = LocalContext.current,
+    heroes: LazyPagingItems<Hero>? = null
 ) {
     var message by remember {
         mutableStateOf(
@@ -62,35 +69,65 @@ fun InformationScreen(
         startAnimation = true
     }
 
-    InformationContent(alphaAnimation, icon, message)
+    InformationContent(
+        alphaAnimation = alphaAnimation,
+        icon = icon,
+        message = message,
+        heroes = heroes,
+        error = error
+    )
 }
 
 @Composable
-private fun InformationContent(alphaAnimation: Float, @DrawableRes icon: Int, message: String) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+private fun InformationContent(
+    alphaAnimation: Float,
+    @DrawableRes icon: Int,
+    message: String,
+    heroes: LazyPagingItems<Hero>? = null,
+    error: LoadState.Error? = null,
+) {
+
+    var isRefreshing by remember {
+        mutableStateOf(false)
+    }
+    val refreshState = rememberSwipeRefreshState(isRefreshing = isRefreshing)
+    val scrollState = rememberScrollState()
+
+    SwipeRefresh(
+        swipeEnabled = error != null,
+        state = refreshState,
+        onRefresh = {
+            isRefreshing = true
+            heroes?.refresh()
+            isRefreshing = false
+        }
     ) {
-        Icon(
+        Column(
             modifier = Modifier
-                .size(NETWORK_ERROR_ICON_SIZE)
-                .alpha(alpha = alphaAnimation),
-            painter = painterResource(id = icon),
-            contentDescription = stringResource(R.string.network_error_icon),
-            tint = MaterialTheme.colors.errorContentColor
-        )
-        Text(
-            modifier = Modifier
-                .padding(all = SMALL_PADDING)
-                .alpha(alpha = alphaAnimation),
-            text = message,
-            color = MaterialTheme.colors.errorContentColor,
-            textAlign = TextAlign.Center,
-            fontWeight = FontWeight.Medium,
-            fontSize = MaterialTheme.typography.subtitle1.fontSize
-        )
+                .fillMaxSize()
+                .verticalScroll(scrollState),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Icon(
+                modifier = Modifier
+                    .size(NETWORK_ERROR_ICON_SIZE)
+                    .alpha(alpha = alphaAnimation),
+                painter = painterResource(id = icon),
+                contentDescription = stringResource(R.string.network_error_icon),
+                tint = MaterialTheme.colors.errorContentColor
+            )
+            Text(
+                modifier = Modifier
+                    .padding(all = SMALL_PADDING)
+                    .alpha(alpha = alphaAnimation),
+                text = message,
+                color = MaterialTheme.colors.errorContentColor,
+                textAlign = TextAlign.Center,
+                fontWeight = FontWeight.Medium,
+                fontSize = MaterialTheme.typography.subtitle1.fontSize
+            )
+        }
     }
 }
 
