@@ -83,7 +83,7 @@ fun handlePagingResult(
                 false
             }
             error != null -> {
-                InformationScreen(error = error)
+                InformationScreen(error = error, heroes = heroes)
                 false
             }
             heroes.itemCount < 1 -> {
