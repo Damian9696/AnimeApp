@@ -12,7 +12,7 @@ import com.example.animeapp.ui.theme.topAppBarBackgroundColor
 import com.example.animeapp.ui.theme.topAppBarContentColor
 
 @Composable
-fun HomeTopBar(onSearchClicked: () -> Unit = {}) {
+fun HomeTopBar(onSearchClicked: () -> Unit) {
     TopAppBar(title = {
         Text(
             text = stringResource(R.string.explore),
@@ -32,4 +32,4 @@ fun HomeTopBar(onSearchClicked: () -> Unit = {}) {
 @Preview
 @Preview(uiMode = UI_MODE_NIGHT_YES)
 @Composable
-fun HomeTopBarPreview() = HomeTopBar()
+fun HomeTopBarPreview() = HomeTopBar {}

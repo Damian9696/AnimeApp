@@ -31,19 +31,25 @@ import java.net.ConnectException
 import java.net.SocketTimeoutException
 
 @Composable
-fun ErrorScreen(
-    error: LoadState.Error,
+fun InformationScreen(
+    error: LoadState.Error? = null,
     context: Context = LocalContext.current
 ) {
-    val message by remember {
+    var message by remember {
         mutableStateOf(
-            parseErrorMessage(
-                context = context,
-                message = error.toString()
-            )
+            "Find your Favorite Hero!"
         )
     }
-    val icon by remember { mutableStateOf(R.drawable.ic_network_error) }
+    var icon by remember { mutableStateOf(R.drawable.ic_search_document) }
+
+    error?.let {
+        message = parseErrorMessage(
+            context = context,
+            error = error
+        )
+        icon = R.drawable.ic_network_error
+    }
+
     var startAnimation by remember { mutableStateOf(false) }
     val alphaAnimation by animateFloatAsState(
         targetValue = if (startAnimation) ContentAlpha.disabled else 0f,
@@ -56,11 +62,11 @@ fun ErrorScreen(
         startAnimation = true
     }
 
-    ErrorContent(alphaAnimation, icon, message)
+    InformationContent(alphaAnimation, icon, message)
 }
 
 @Composable
-private fun ErrorContent(alphaAnimation: Float, @DrawableRes icon: Int, message: String) {
+private fun InformationContent(alphaAnimation: Float, @DrawableRes icon: Int, message: String) {
     Column(
         modifier = Modifier
             .fillMaxSize(),
@@ -88,12 +94,12 @@ private fun ErrorContent(alphaAnimation: Float, @DrawableRes icon: Int, message:
     }
 }
 
-fun parseErrorMessage(context: Context, message: String): String {
-    return when {
-        message.contains(context.getString(R.string.socket_timeout_exception)) -> {
+fun parseErrorMessage(context: Context, error: LoadState.Error): String {
+    return when (error.error) {
+        is SocketTimeoutException -> {
             context.getString(R.string.server_unavailable)
         }
-        message.contains(context.getString(R.string.connection_exception)) -> {
+        is ConnectException -> {
             context.getString(R.string.internet_unavailable)
         }
         else -> {
@@ -115,12 +121,12 @@ class EmptyScreenParameterProvider : PreviewParameterProvider<LoadState.Error> {
 fun ErrorContentPreview(
     @PreviewParameter(EmptyScreenParameterProvider::class) error: LoadState.Error
 ) {
-    ErrorContent(
+    InformationContent(
         alphaAnimation = ContentAlpha.disabled,
         icon = R.drawable.ic_network_error,
         message = parseErrorMessage(
             context = LocalContext.current,
-            message = error.toString()
+            error = error
         )
     )
 }
