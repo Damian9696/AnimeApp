@@ -33,4 +33,12 @@
 
     <!-- Details screen-->
     <string name="information_icon">Information icon</string>
+    <string name="logo_icon">Logo icon</string>
+    <string name="power">Power</string>
+    <string name="month">Month</string>
+    <string name="birthday">Birthday</string>
+    <string name="about">About</string>
+    <string name="family">Family</string>
+    <string name="abilities">Abilities</string>
+    <string name="nature_types">Nature types</string>
 </resources>
