@@ -30,4 +30,7 @@
     <!--  Search screen-->
     <string name="search_placeholder">Search here…</string>
     <string name="close_icon">Close icon</string>
+
+    <!-- Details screen-->
+    <string name="information_icon">Information icon</string>
 </resources>
