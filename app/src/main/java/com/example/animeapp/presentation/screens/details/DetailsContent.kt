@@ -1,5 +1,6 @@
 package com.example.animeapp.presentation.screens.details
 
+import android.graphics.Color.parseColor
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -8,8 +9,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -30,17 +30,39 @@ import com.example.animeapp.presentation.components.InfoBox
 import com.example.animeapp.presentation.components.OrderedList
 import com.example.animeapp.ui.theme.*
 import com.example.animeapp.util.Constants.ABOUT_TEXT_MAX_LINES
+import com.example.animeapp.util.Constants.BLACK_HEX
+import com.example.animeapp.util.Constants.DARK_VIBRANT_KEY
 import com.example.animeapp.util.Constants.LOREM_IPSUM_LONG
 import com.example.animeapp.util.Constants.LOREM_IPSUM_SHORT
 import com.example.animeapp.util.Constants.MIN_BACKGROUND_IMAGE_HEIGHT
+import com.example.animeapp.util.Constants.ON_DARK_VIBRANT_KEY
+import com.example.animeapp.util.Constants.VIBRANT_KEY
+import com.example.animeapp.util.Constants.WHITE_HEX
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 @ExperimentalCoilApi
 @ExperimentalMaterialApi
 @Composable
 fun DetailsContent(
     navHostController: NavHostController,
-    selectedHero: Hero?
+    selectedHero: Hero?,
+    colors: Map<String, String>
 ) {
+
+    var vibrant by remember { mutableStateOf(BLACK_HEX) }
+    var darkVibrant by remember { mutableStateOf(BLACK_HEX) }
+    var onDarkVibrant by remember { mutableStateOf(WHITE_HEX) }
+
+    LaunchedEffect(key1 = selectedHero) {
+        colors[VIBRANT_KEY]?.let { vibrant = it }
+        colors[DARK_VIBRANT_KEY]?.let { darkVibrant = it }
+        colors[ON_DARK_VIBRANT_KEY]?.let { onDarkVibrant = it }
+    }
+
+    val systemUiController = rememberSystemUiController()
+    systemUiController.setStatusBarColor(
+        color = Color(parseColor(darkVibrant))
+    )
 
     val scaffoldState = rememberBottomSheetScaffoldState(
         bottomSheetState = rememberBottomSheetState(initialValue = BottomSheetValue.Expanded)
@@ -60,13 +82,21 @@ fun DetailsContent(
         sheetPeekHeight = MIN_SHEET_HEIGHT,
         scaffoldState = scaffoldState,
         sheetContent = {
-            selectedHero?.let { BottomSheetContent(selectedHero = it) }
+            selectedHero?.let {
+                BottomSheetContent(
+                    selectedHero = it,
+                    infoBoxIconColor = Color(parseColor(vibrant)),
+                    sheetBackgroundColor = Color(parseColor(darkVibrant)),
+                    contentColor = Color(parseColor(onDarkVibrant))
+                )
+            }
         },
         content = {
             selectedHero?.let { hero ->
                 BackgroundContent(
                     heroImage = hero.image,
                     imageFraction = currentSheetFraction,
+                    backgroundColor = Color(parseColor(darkVibrant)),
                     onCloseClicked = {
                         navHostController.popBackStack()
                     })
