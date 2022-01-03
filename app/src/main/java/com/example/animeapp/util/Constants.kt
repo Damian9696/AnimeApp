@@ -42,4 +42,8 @@ object Constants {
     const val ON_DARK_VIBRANT_KEY = "onDarkVibrant"
     const val WHITE_HEX = "#FFFFFF"
     const val BLACK_HEX = "#000000"
+
+    const val SEARCH_WIDGET = "SearchWidget"
+    const val TEXT_FIELD = "TextField"
+    const val CLOSE_BUTTON = "CloseButton"
 }
