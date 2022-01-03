@@ -14,6 +14,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
@@ -21,6 +23,9 @@ import com.example.animeapp.R
 import com.example.animeapp.ui.theme.TOP_APP_BAR_HEIGHT
 import com.example.animeapp.ui.theme.topAppBarBackgroundColor
 import com.example.animeapp.ui.theme.topAppBarContentColor
+import com.example.animeapp.util.Constants.CLOSE_BUTTON
+import com.example.animeapp.util.Constants.SEARCH_WIDGET
+import com.example.animeapp.util.Constants.TEXT_FIELD
 
 @Composable
 fun SearchTopBar(
@@ -47,11 +52,17 @@ fun SearchWidget(
     Surface(
         modifier = Modifier
             .fillMaxWidth()
-            .height(TOP_APP_BAR_HEIGHT),
+            .height(TOP_APP_BAR_HEIGHT)
+            .semantics {
+                contentDescription = SEARCH_WIDGET
+            },
         elevation = AppBarDefaults.TopAppBarElevation,
         color = MaterialTheme.colors.topAppBarBackgroundColor
     ) {
         TextField(
+            modifier = Modifier
+                .fillMaxWidth()
+                .semantics { contentDescription = TEXT_FIELD },
             value = text,
             onValueChange = { onTextChange(it) },
             placeholder = {
@@ -78,6 +89,7 @@ fun SearchWidget(
             },
             trailingIcon = {
                 IconButton(
+                    modifier = Modifier.semantics { contentDescription = CLOSE_BUTTON },
                     onClick = {
                         if (text.isNotEmpty()) {
                             onTextChange("")
@@ -119,3 +131,5 @@ fun SearchWidgetPreview() =
         onSearchClicked = {},
         onCloseClicked = {}
     )
+
+
