@@ -24,3 +24,5 @@ val TOP_APP_BAR_HEIGHT = 56.dp
 val INFO_ICON_SIZE = 32.dp
 
 val MIN_SHEET_HEIGHT = 140.dp
+
+val EXPANDED_RADIUS = 0.dp
