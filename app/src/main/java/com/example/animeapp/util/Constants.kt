@@ -34,4 +34,6 @@ object Constants {
     const val MILLI_TO_HOUR_UNIT = (1000f / 60f / 60f)
 
     const val ABOUT_TEXT_MAX_LINES = 7
+
+    const val MIN_BACKGROUND_IMAGE_HEIGHT = 0.4f
 }
