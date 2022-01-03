@@ -19,9 +19,11 @@ object DatabaseModule {
     @Singleton
     fun provideDatabase(
         @ApplicationContext context: Context
-    ) = Room.databaseBuilder(
-        context,
-        AnimeDatabase::class.java,
-        ANIME_DATABASE
-    ).build()
+    ): AnimeDatabase {
+        return Room.databaseBuilder(
+            context,
+            AnimeDatabase::class.java,
+            ANIME_DATABASE
+        ).build()
+    }
 }

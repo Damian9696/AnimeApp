@@ -1,11 +1,15 @@
 package com.example.animeapp.di
 
 import android.content.Context
+import com.example.animeapp.data.local.LocalDataSource
+import com.example.animeapp.data.local.database.AnimeDatabase
 import com.example.animeapp.data.local.preferences.DataStoreOperations
 import com.example.animeapp.data.local.preferences.DataStoreOperationsImpl
+import com.example.animeapp.data.repository.LocalDataSourceImpl
 import com.example.animeapp.data.repository.Repository
 import com.example.animeapp.domain.use_cases.UseCases
 import com.example.animeapp.domain.use_cases.get_all_heroes.GetAllHeroesUseCase
+import com.example.animeapp.domain.use_cases.get_selected_hero.GetSelectedHeroUseCase
 import com.example.animeapp.domain.use_cases.read_onboarding.ReadOnBoardingUseCase
 import com.example.animeapp.domain.use_cases.save_onboarding.SaveOnBoardingUseCase
 import com.example.animeapp.domain.use_cases.search_heroes.SearchHeroesUseCase
@@ -33,7 +37,16 @@ object RepositoryModule {
             saveOnBoardingUseCase = SaveOnBoardingUseCase(repository = repository),
             readOnBoardingUseCase = ReadOnBoardingUseCase(repository = repository),
             getAllHeroesUseCase = GetAllHeroesUseCase(repository = repository),
-            searchHeroesUseCase = SearchHeroesUseCase(repository = repository)
+            searchHeroesUseCase = SearchHeroesUseCase(repository = repository),
+            getSelectedHeroUseCase = GetSelectedHeroUseCase(repository = repository)
         )
+    }
+
+    @Provides
+    @Singleton
+    fun provideLocalDataSource(
+        animeDatabase: AnimeDatabase
+    ): LocalDataSource {
+        return LocalDataSourceImpl(animeDatabase = animeDatabase)
     }
 }
