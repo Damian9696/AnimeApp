@@ -1,12 +1,15 @@
 package com.example.animeapp.presentation.screens.details
 
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -45,7 +48,15 @@ fun DetailsContent(
 
     val currentSheetFraction = scaffoldState.currentSheetFraction
 
+    val radiusAnimation by animateDpAsState(
+        targetValue = if (currentSheetFraction == 1f) EXTRA_LARGE_PADDING else EXPANDED_RADIUS
+    )
+
     BottomSheetScaffold(
+        sheetShape = RoundedCornerShape(
+            topStart = radiusAnimation,
+            topEnd = radiusAnimation
+        ),
         sheetPeekHeight = MIN_SHEET_HEIGHT,
         scaffoldState = scaffoldState,
         sheetContent = {
