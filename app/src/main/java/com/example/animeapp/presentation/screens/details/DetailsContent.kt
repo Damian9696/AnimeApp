@@ -22,12 +22,14 @@ import coil.compose.rememberImagePainter
 import com.example.animeapp.BuildConfig
 import com.example.animeapp.R
 import com.example.animeapp.domain.model.Hero
+import com.example.animeapp.ext.bottomsheet.currentSheetFraction
 import com.example.animeapp.presentation.components.InfoBox
 import com.example.animeapp.presentation.components.OrderedList
 import com.example.animeapp.ui.theme.*
 import com.example.animeapp.util.Constants.ABOUT_TEXT_MAX_LINES
 import com.example.animeapp.util.Constants.LOREM_IPSUM_LONG
 import com.example.animeapp.util.Constants.LOREM_IPSUM_SHORT
+import com.example.animeapp.util.Constants.MIN_BACKGROUND_IMAGE_HEIGHT
 
 @ExperimentalCoilApi
 @ExperimentalMaterialApi
@@ -41,6 +43,8 @@ fun DetailsContent(
         bottomSheetState = rememberBottomSheetState(initialValue = BottomSheetValue.Expanded)
     )
 
+    val currentSheetFraction = scaffoldState.currentSheetFraction
+
     BottomSheetScaffold(
         sheetPeekHeight = MIN_SHEET_HEIGHT,
         scaffoldState = scaffoldState,
@@ -49,9 +53,12 @@ fun DetailsContent(
         },
         content = {
             selectedHero?.let { hero ->
-                BackgroundContent(heroImage = hero.image, onCloseClicked = {
-                    navHostController.popBackStack()
-                })
+                BackgroundContent(
+                    heroImage = hero.image,
+                    imageFraction = currentSheetFraction,
+                    onCloseClicked = {
+                        navHostController.popBackStack()
+                    })
             }
         }
     )
@@ -180,7 +187,7 @@ fun BackgroundContent(
         Image(
             modifier = Modifier
                 .fillMaxWidth()
-                .fillMaxHeight(fraction = imageFraction)
+                .fillMaxHeight(fraction = imageFraction + MIN_BACKGROUND_IMAGE_HEIGHT)
                 .align(alignment = Alignment.TopStart),
             painter = painter,
             contentDescription = stringResource(id = R.string.hero_image),
@@ -200,7 +207,6 @@ fun BackgroundContent(
             }
         }
     }
-
 }
 
 @Preview
