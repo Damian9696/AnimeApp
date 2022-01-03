@@ -2,10 +2,11 @@ package com.example.animeapp.data.remote
 
 import com.example.animeapp.domain.model.ApiResponse
 import com.example.animeapp.domain.model.Hero
+import java.io.IOException
 
 class FakeAnimeApi2 : AnimeApi {
 
-    val heroes: Map<Int, List<Hero>> by lazy {
+    private val heroes: Map<Int, List<Hero>> by lazy {
         mapOf(
             1 to page1,
             2 to page2,
@@ -15,7 +16,7 @@ class FakeAnimeApi2 : AnimeApi {
         )
     }
 
-    private val page1 = listOf(
+    private var page1 = listOf(
         Hero(
             id = 1,
             name = "Sasuke",
@@ -395,7 +396,20 @@ class FakeAnimeApi2 : AnimeApi {
         )
     )
 
+    fun clearData() {
+        page1 = emptyList()
+    }
+
+    private var exception = false
+
+    fun addException() {
+        exception = true
+    }
+
     override suspend fun getAllHeroes(page: Int): ApiResponse {
+        if (exception) {
+            throw IOException()
+        }
         require(page in 1..5)
         return ApiResponse(
             success = true,
@@ -412,8 +426,12 @@ class FakeAnimeApi2 : AnimeApi {
 
     private fun calculatePage(page: Int): Map<String, Int?> {
 
-        val firstPage: Int = page
-        val lastPage: Int = page
+        val firstPage = 1
+        val lastPage = 5
+
+        if (page1.isEmpty()) {
+            return mapOf(PREV_PAGE_KEY to null, NEXT_PAGE_KEY to null)
+        }
 
         return mapOf(
             PREV_PAGE_KEY to if (page in (firstPage + 1)..lastPage) page.minus(1) else null,
