@@ -60,3 +60,7 @@ val Colors.shimmerContentColor
 val Colors.errorContentColor
     @Composable
     get() = if (isLight) DarkGray else LightGray
+
+val Colors.statusBarColor
+    @Composable
+    get() = if (isLight) Purple500 else Color.Black
