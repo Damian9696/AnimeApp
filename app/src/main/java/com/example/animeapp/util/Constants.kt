@@ -36,4 +36,10 @@ object Constants {
     const val ABOUT_TEXT_MAX_LINES = 7
 
     const val MIN_BACKGROUND_IMAGE_HEIGHT = 0.4f
+
+    const val VIBRANT_KEY = "vibrant"
+    const val DARK_VIBRANT_KEY = "darkVibrant"
+    const val ON_DARK_VIBRANT_KEY = "onDarkVibrant"
+    const val WHITE_HEX = "#FFFFFF"
+    const val BLACK_HEX = "#000000"
 }
