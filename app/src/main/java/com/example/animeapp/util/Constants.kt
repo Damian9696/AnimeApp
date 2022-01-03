@@ -46,4 +46,8 @@ object Constants {
     const val SEARCH_WIDGET = "SearchWidget"
     const val TEXT_FIELD = "TextField"
     const val CLOSE_BUTTON = "CloseButton"
+
+    const val FILLED_STAR = "FilledStar"
+    const val HALF_FILLED_STAR = "HalfFilledStar"
+    const val EMPTY_STAR = "EmptyStar"
 }
