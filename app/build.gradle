@@ -37,6 +37,10 @@ android {
             initWith(buildTypes.debug)
             buildConfigField 'String', 'BASE_URL', "\"http://10.0.2.2:8080\""
         }
+        heroku{
+            initWith(buildTypes.debug)
+            buildConfigField 'String', 'BASE_URL', "\"https://anime-damian-server.herokuapp.com\""
+        }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -78,6 +82,7 @@ dependencies {
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
 
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
+    herokuImplementation "androidx.compose.ui:ui-tooling:$compose_version"
 
     // Compose Navigation
     implementation("androidx.navigation:navigation-compose:2.4.0-rc01")
